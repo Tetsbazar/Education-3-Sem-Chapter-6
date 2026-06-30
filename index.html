@@ -157,12 +157,14 @@ body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c
 
 <script>
 // ============================================================
-//  ইউজার ডেটাবেস
+//  ইউজার ডেটাবেস এবং স্টোরেজ ম্যানেজমেন্ট
 // ============================================================
 const MAX_ATTEMPTS = 10;
 const TOTAL_SETS = 10;
+const STORAGE_KEY = 'testBazarClass12Ch6_v1'; // এই পেজের জন্য আলাদা LocalStorage Key
 
-const userData = [
+// ডিফল্ট ইউজার ডেটা (শুধুমাত্র প্রথমবার লোড হওয়ার জন্য)
+const defaultUsers = [
   {username:"alfa_romeo", password:"ARx7P29m", attempts:{}},
   {username:"santos", password:"St8Qv41L", attempts:{}},
   {username:"falcon", password:"Fc3MZ92k", attempts:{}},
@@ -264,6 +266,26 @@ const userData = [
   {username:"wildfire", password:"Wi1Tk64Rv", attempts:{}},
   {username:"zenith", password:"Ze9Qx28Lp", attempts:{}}
 ];
+
+// ============================================================
+//  LocalStorage থেকে ডেটা লোড/সেভ ফাংশন
+// ============================================================
+function loadUserData() {
+  const storedData = localStorage.getItem(STORAGE_KEY);
+  if (storedData) {
+    return JSON.parse(storedData);
+  } else {
+    saveUserData(defaultUsers);
+    return defaultUsers;
+  }
+}
+
+function saveUserData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// গ্লোবাল ভেরিয়েবল ইনিশিয়ালাইজেশন
+let userData = loadUserData();
 
 // ============================================================
 //  সব সেটের ডেটা (Set 1-10 for Chapter 6)
@@ -454,7 +476,7 @@ const allSets = {
       {q: 'সেগুইনের শারীরবৃত্তীয় পদ্ধতিতে শিশুর কীসের প্রশিক্ষণের ওপর গুরুত্ব দেওয়া হয়?', opts: ['স্মৃতির', 'পঞ্চ-ইন্দ্রিয়ের', 'কল্পনার', 'বাচনিক ক্ষমতার'], ans: 1, exp: 'এই পদ্ধতিতে শিশুর পঞ্চ-ইন্দ্রিয়ের প্রশিক্ষণের ওপর সবচেয়ে বেশি গুরুত্ব দান করা হয়।'},
       {q: '1912 খ্রিস্টাব্দে কে আত্ম-শিক্ষণ পদ্ধতি (Self-education method) আবিষ্কার করেন?', opts: ['সেগুইন', 'পিয়াজে', 'রুশো', 'মাদাম মারিয়া মস্তেসরী'], ans: 3, exp: 'মাদাম মারিয়া মস্তেসরী 1912 খ্রিস্টাব্দে এই পদ্ধতি আবিষ্কার করেন, যেখানে উপকরণ দ্বারা শিক্ষার কথা বলা হয়েছে।'},
       {q: 'শিশুকে সরাসরি শিক্ষা না দিয়ে তার শিক্ষার জন্য পরিবেশ সৃষ্টি করা কোন্ পদ্ধতির মূল কথা?', opts: ['পিয়াজের পদ্ধতি', 'মস্তেসরীর আত্ম-শিক্ষণ পদ্ধতি', 'সেগুইনের পদ্ধতি', 'কর্ম বিশ্লেষণ পদ্ধতি'], ans: 1, exp: 'মস্তেসরী মনে করতেন সরাসরি শিক্ষার বদলে খেলনা বা ব্লকের মাধ্যমে শিশুর জন্য একটি শিক্ষার পরিবেশ সৃষ্টি করতে হবে।'},
-      {q: 'মস্তেসরীর উত্তরসূরি কে ছিলেন?', opts: ['রুশো', 'সেগুইন', 'পিয়াজে', 'ফ্রয়েবেল'], ans: 2, exp: 'মনোবিদ জিন পিয়াজে ছিলেন শিক্ষাবিদ মাদাম মারিয়া মস্তেসরীর সুযোগ্য উত্তরসূরি।'},
+      {q: 'মস্তেসরীর উত্তরসূরি কে ছিলেন?', opts: ['রুশো', 'সেগুইন', 'পিয়াজে', 'ফ্রোয়েবেল'], ans: 2, exp: 'মনোবিদ জিন পিয়াজে ছিলেন শিক্ষাবিদ মাদাম মারিয়া মস্তেসরীর সুযোগ্য উত্তরসূরি।'},
       {q: '"শিশুরা নিজেরাই তাদের পারিপার্শ্বিক অবস্থা আবিষ্কার করবে"—এটি কোন্ পদ্ধতির মূলকথা?', opts: ['মস্তেসরীর পদ্ধতি', 'পিয়াজের পদ্ধতি', 'নির্ণায়ক পদ্ধতি', 'সেগুইনের পদ্ধতি'], ans: 1, exp: 'পিয়াজে জোর দিয়েছিলেন যে শিশুরা নিজেরাই পরিবেশ আবিষ্কার করার মাধ্যমে শিক্ষালাভ করবে।'},
       {q: 'কর্মদক্ষতাকে ছোটো ছোটো অংশে ভাগ করে সবচেয়ে সহজ কর্মটি দ্বারা প্রশিক্ষণ শুরু করাকে কী বলে?', opts: ['আত্মশিক্ষণ পদ্ধতি', 'নির্ণায়ক পদ্ধতি', 'শারীরবৃত্তীয় পদ্ধতি', 'কর্ম বিশ্লেষণ পদ্ধতি'], ans: 3, exp: 'কোনো জটিল কাজ বা সমস্যাকে ছোটো অংশে ভেঙে সহজ থেকে কঠিনের দিকে শিক্ষাদান করাই হলো কর্ম বিশ্লেষণ পদ্ধতি।'},
       {q: 'বুদ্ধিবৃত্তিক অক্ষম শিশুদের শিক্ষাদানে শিক্ষকের ভূমিকা কেমন হওয়া উচিত?', opts: ['বিমূর্ত ধারণার মাধ্যমে শিক্ষা', 'মৌখিক পদ্ধতির ব্যবহার', 'বাস্তব উদাহরণ ও প্রত্যক্ষ অভিজ্ঞতার মাধ্যমে শিক্ষাদান', 'একটানা শিক্ষাদান'], ans: 2, exp: 'শিক্ষক এই ধরনের শিশুদের মৌখিক পদ্ধতির পরিবর্তে বাস্তব উদাহরণ ও প্রত্যক্ষ অভিজ্ঞতার মাধ্যমে শিক্ষাদান করবেন।'},
@@ -500,7 +522,7 @@ let cur = 0, score = 0, wrong = 0, answered = false, timerInterval, timeLeft = 1
 let userAnswers = [];
 let isLoggedIn = false;
 let currentUser = null;
-let pendingSetId = null; 
+let pendingSetId = null;
 
 // ============================================================
 //  হাব পেজ বিল্ড
@@ -542,7 +564,6 @@ function goToHub() {
   document.getElementById('hubPage').classList.remove('hidden');
   document.getElementById('timerBox').classList.remove('danger');
   clearInterval(timerInterval);
-  // Reset login status when going back to hub
   isLoggedIn = false;
   currentUser = null;
 }
@@ -553,8 +574,6 @@ function goToHub() {
 function selectSet(id) {
   currentSetId = id;
   const set = allSets[id];
-  
-  // সবসময় লগইন মোডাল দেখাও
   pendingSetId = id;
   document.getElementById('loginSetName').textContent = `📚 ${set.name} — ${set.topic}`;
   document.getElementById('loginOverlay').classList.add('active');
@@ -582,9 +601,12 @@ function doLoginFromSet() {
     return;
   }
 
+  // Find user in the persistent userData array
   const user = userData.find(u => u.username === username && u.password === password);
+  
   if (user) {
     const setAttempts = user.attempts[currentSetId] || 0;
+    
     if (setAttempts >= MAX_ATTEMPTS) {
       limitInfo.style.display = 'block';
       document.getElementById('limitMsg').textContent = `আপনি এই অ্যাকাউন্ট দিয়ে ${allSets[currentSetId].name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন। আর Test দেওয়া সম্ভব নয়।`;
@@ -629,13 +651,18 @@ document.addEventListener('DOMContentLoaded', function() {
 function startQuiz(setId) {
   if (!isLoggedIn || !currentUser) return;
   
-  const setAttempts = currentUser.attempts[setId] || 0;
+  // Re-check attempts from the persistent data just to be safe
+  const freshUser = userData.find(u => u.username === currentUser.username);
+  const setAttempts = freshUser.attempts[setId] || 0;
+  
   if (setAttempts >= MAX_ATTEMPTS) {
     alert(`⚠️ আপনি এই সেটের সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
     return;
   }
   
-  currentUser.attempts[setId] = (currentUser.attempts[setId] || 0) + 1;
+  // Increment attempt and SAVE to LocalStorage immediately
+  freshUser.attempts[setId] = setAttempts + 1;
+  saveUserData(userData); // This ensures the count persists after refresh
   
   cur = 0; score = 0; wrong = 0; answered = false;
   timeLeft = 10 * 60; userAnswers = [];
@@ -720,7 +747,11 @@ function showResult() {
   document.getElementById('rbWrong').textContent = wrong;
   document.getElementById('rbPct').textContent = pct + '%';
   
-  const remaining = MAX_ATTEMPTS - (currentUser.attempts[currentSetId] || 0);
+  // Calculate remaining attempts based on persistent data
+  const freshUser = userData.find(u => u.username === currentUser.username);
+  const currentAttempts = freshUser.attempts[currentSetId] || 0;
+  const remaining = MAX_ATTEMPTS - currentAttempts;
+  
   document.getElementById('attemptInfo').innerHTML = `👤 ${currentUser.username} — ${set.name}: বাকি আছে <strong>${remaining}</strong> বার Test দেওয়ার সুযোগ (সর্বোচ্চ ${MAX_ATTEMPTS} বার)`;
   
   const grades = [
@@ -775,3 +806,4 @@ function loadReview() {
 
 </body>
 </html>
+
